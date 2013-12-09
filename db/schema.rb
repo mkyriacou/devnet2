@@ -11,7 +11,84 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131208150020) do
+ActiveRecord::Schema.define(:version => 20131209025624) do
+
+  create_table "banters", :force => true do |t|
+    t.integer  "poll_user_id"
+    t.integer  "developer_id"
+    t.integer  "reviewer_id"
+    t.text     "text"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "buddies", :force => true do |t|
+    t.integer  "developer_id"
+    t.integer  "review_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "dashboards", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "homes", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "poll_users", :force => true do |t|
+    t.integer  "poll_id"
+    t.integer  "user_id"
+    t.integer  "stars_awarded"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "polls", :force => true do |t|
+    t.integer  "project_id"
+    t.string   "title"
+    t.string   "description"
+    t.string   "category"
+    t.boolean  "real_time"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "projects", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "questions", :force => true do |t|
+    t.integer  "poll_id"
+    t.string   "question_text"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "responses", :force => true do |t|
+    t.integer  "reviewer_id"
+    t.integer  "poll_id"
+    t.integer  "question_id"
+    t.string   "question_type"
+    t.text     "response"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "urllinks", :force => true do |t|
+    t.integer  "poll_id"
+    t.string   "urllinks"
+    t.string   "caption"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -30,5 +107,15 @@ ActiveRecord::Schema.define(:version => 20131208150020) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "votes", :force => true do |t|
+    t.integer  "poll_id"
+    t.string   "description"
+    t.string   "up_vote_label"
+    t.string   "neutral_vote_label"
+    t.string   "down_vote_label"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
 
 end
