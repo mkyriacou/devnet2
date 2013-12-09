@@ -1,0 +1,3 @@
+class Banter < ActiveRecord::Base
+  # attr_accessible :title, :body
+end
