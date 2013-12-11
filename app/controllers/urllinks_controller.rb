@@ -1,0 +1,2 @@
+class UrllinksController < ApplicationController
+end

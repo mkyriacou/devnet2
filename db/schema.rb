@@ -11,20 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131209025624) do
+ActiveRecord::Schema.define(:version => 20131209175018) do
 
   create_table "banters", :force => true do |t|
-    t.integer  "poll_user_id"
+    t.integer  "response_id"
     t.integer  "developer_id"
     t.integer  "reviewer_id"
     t.text     "text"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  create_table "buddies", :force => true do |t|
-    t.integer  "developer_id"
-    t.integer  "review_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
@@ -37,14 +30,6 @@ ActiveRecord::Schema.define(:version => 20131209025624) do
   create_table "homes", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "poll_users", :force => true do |t|
-    t.integer  "poll_id"
-    t.integer  "user_id"
-    t.integer  "stars_awarded"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
   end
 
   create_table "polls", :force => true do |t|
@@ -65,19 +50,18 @@ ActiveRecord::Schema.define(:version => 20131209025624) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "questions", :force => true do |t|
-    t.integer  "poll_id"
-    t.string   "question_text"
+  create_table "responses", :force => true do |t|
+    t.integer  "reviewer_id"
+    t.integer  "question_id"
+    t.string   "question_type"
+    t.text     "response_text"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
 
-  create_table "responses", :force => true do |t|
-    t.integer  "reviewer_id"
+  create_table "text_questions", :force => true do |t|
     t.integer  "poll_id"
-    t.integer  "question_id"
-    t.string   "question_type"
-    t.text     "response"
+    t.text     "question_text"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
@@ -101,6 +85,11 @@ ActiveRecord::Schema.define(:version => 20131209025624) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "name"
+    t.string   "city"
+    t.string   "sex"
+    t.string   "age_range"
+    t.string   "country"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
   end
@@ -108,9 +97,9 @@ ActiveRecord::Schema.define(:version => 20131209025624) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
-  create_table "votes", :force => true do |t|
+  create_table "vote_questions", :force => true do |t|
     t.integer  "poll_id"
-    t.string   "description"
+    t.string   "preamble"
     t.string   "up_vote_label"
     t.string   "neutral_vote_label"
     t.string   "down_vote_label"

@@ -1,0 +1,2 @@
+class TextQuestionsController < ApplicationController
+end

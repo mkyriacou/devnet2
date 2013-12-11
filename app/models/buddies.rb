@@ -1,3 +1,6 @@
 class Buddies < ActiveRecord::Base
-  # attr_accessible :title, :body
+# DON'T KNOW HOW TO DO A SELF JOIN!!
+  # attr_accessible :developer_id, :reviewer_id
+  # belongs_to :user
+  #
 end

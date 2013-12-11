@@ -4,6 +4,13 @@ Devnet2::Application.routes.draw do
   root to: "homes#index"
 
   resources :dashboards
+  resources :projects do
+    resources :polls do
+      resources :vote_questions
+      resources :text_questions
+      resources :urllinks
+    end # polls
+  end # projects
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

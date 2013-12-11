@@ -1,3 +1,5 @@
 class Urllink < ActiveRecord::Base
-  # attr_accessible :title, :body
+  attr_accessible :poll_id, :urllinks, :caption
+
+  belongs_to :poll
 end

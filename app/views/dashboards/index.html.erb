@@ -1,1 +1,91 @@
 <h1> You are logged in and this is your own user space! </h1>
+
+<h2>Here are your Projects</h2>
+
+<button id="new-project">Add A New Project</button>
+<div id="new-project-form" class="hidden">
+  <form>
+    <input type="text" placeholder="project title" id="new-proj-title">
+    <br>
+    <input type="text" placeholder="project decription" id="new-proj-description">
+    <br>
+    <input type="hidden" id="owner" value=<%= current_user.id %>>
+
+    <button id="save-new-project-details" type="button" >Save!</button>
+    <button id="cancel-new-project" type="button" >Cancel</button>
+  </form>
+</div>
+
+
+<!-- <button id="add-vote-q">Add A Vote Question</button>
+<div id="new-vote-q-form" class="hidden">
+  <form>
+    <input type="text" placeholder="project title" id="new-proj-title">
+    <br>
+    <input type="text" placeholder="project decription" id="new-proj-description">
+
+    <button id="save-new-project-details" type="button" >Save!</button>
+    <button id="cancel-new-project" type="button" >Cancel</button>
+  </form>
+</div>
+ -->
+
+
+<button id="add-text-q">Add A Text Question</button>
+<div id="new-text-q-form" class="hidden">
+  <form>
+    <input type="text" placeholder="question text" id="new-text-q">
+    <br>
+    <button class="btn btn-primary" id="save-new-text-q" type="button" >Add Text Question!</button>
+    <button class="btn btn-default" id="cancel-new-ext-q" type="button" >Cancel</button>
+  </form>
+</div>
+
+
+
+<!-- <button id="add-url">Add A Link</button>
+<div id="new-link-form" class="hidden">
+  <form>
+    <input type="text" placeholder="project title" id="new-proj-title">
+    <br>
+    <input type="text" placeholder="project decription" id="new-proj-description">
+
+    <button id="save-new-project-details" type="button" >Save!</button>
+    <button id="cancel-new-project" type="button" >Cancel</button>
+  </form>
+</div> -->
+
+
+
+
+<button id="start-new-poll">Start a new poll</button>
+<div id="new-poll-form" class="hidden">
+  <form>
+    <input type="text" placeholder="poll title" id="new-poll-title">
+    <br>
+    <input type="text" placeholder="poll decription" id="new-poll-description">
+    <br>
+  <!--   Poll Category
+    <br>
+    <input type="checkbox" name="category" value="App Experience">App Experience
+    <input type="checkbox" name="category" value="Code Review">Code Review
+    <input type="checkbox" name="category" value="Screen Design">Screen Design
+    <input type="checkbox" name="category" value="Artworks">Artworks
+ -->
+    <button class="btn btn-primary" id="save-new-poll-details" type="button" >Save!</button>
+    <button class="btn btn-default" id="cancel-new-poll" type="button" >Cancel</button>
+  </form>
+</div>
+
+
+
+
+
+
+
+
+<button id="show-me-projects">Show all projects!</button>
+<div id="project-listing-div">
+  <table id="project-listing"></table>
+  <hr>
+</div>

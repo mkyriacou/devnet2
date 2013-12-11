@@ -1,0 +1,2 @@
+class VoteQuestionsController < ApplicationController
+end
