@@ -1,15 +1,36 @@
 <h1> You are logged in and this is your own user space! </h1>
-
-<h2>Here are your Projects</h2>
-
+<button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-star"></span> Star
+</button>
+<button id="home-nav" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-home"></span>
+</button>
 <button id="new-project">Add A New Project</button>
+<button id="show-me-projects">Show all projects!</button>
+
+
+<!--     ---------------    PROJECT DIVS    ---------------
+ -->
+
+<div id="project-listing-div" class="hidden">
+  <p>All Projects - inspecting as owner/visitor</p>
+  <table id="project-listing"></table>
+</div>
+
+<div id="selected-project" class="hidden">
+  <p>Selected Project - inspecting as owner/visitor</p>
+  <span></span>
+  <button id="start-new-poll">Start a new poll</button>
+
+</div>
+
 <div id="new-project-form" class="hidden">
   <form>
     <input type="text" placeholder="project title" id="new-proj-title">
     <br>
     <input type="text" placeholder="project decription" id="new-proj-description">
     <br>
-    <input type="hidden" id="owner" value=<%= current_user.id %>>
+    <input type="hidden" name="user_id" id="owner" value=<%= current_user.id %>>
 
     <button id="save-new-project-details" type="button" >Save!</button>
     <button id="cancel-new-project" type="button" >Cancel</button>
@@ -17,48 +38,21 @@
 </div>
 
 
-<!-- <button id="add-vote-q">Add A Vote Question</button>
-<div id="new-vote-q-form" class="hidden">
-  <form>
-    <input type="text" placeholder="project title" id="new-proj-title">
-    <br>
-    <input type="text" placeholder="project decription" id="new-proj-description">
 
-    <button id="save-new-project-details" type="button" >Save!</button>
-    <button id="cancel-new-project" type="button" >Cancel</button>
-  </form>
-</div>
+<!--   ---------------  POLL DIVS    ---------------
  -->
 
+<div id="all-project-polls" class="hidden">
+  <p>All Project Polls - inspecting as owner/visitor</p>
+  <table></table>
+</div>
 
-<button id="add-text-q">Add A Text Question</button>
-<div id="new-text-q-form" class="hidden">
-  <form>
-    <input type="text" placeholder="question text" id="new-text-q">
-    <br>
-    <button class="btn btn-primary" id="save-new-text-q" type="button" >Add Text Question!</button>
-    <button class="btn btn-default" id="cancel-new-ext-q" type="button" >Cancel</button>
-  </form>
+<div id="selected-poll" class="hidden">
+  <p>Selected Poll - inspecting as owner/visitor</p>
+  <span></span>
 </div>
 
 
-
-<!-- <button id="add-url">Add A Link</button>
-<div id="new-link-form" class="hidden">
-  <form>
-    <input type="text" placeholder="project title" id="new-proj-title">
-    <br>
-    <input type="text" placeholder="project decription" id="new-proj-description">
-
-    <button id="save-new-project-details" type="button" >Save!</button>
-    <button id="cancel-new-project" type="button" >Cancel</button>
-  </form>
-</div> -->
-
-
-
-
-<button id="start-new-poll">Start a new poll</button>
 <div id="new-poll-form" class="hidden">
   <form>
     <input type="text" placeholder="poll title" id="new-poll-title">
@@ -72,6 +66,10 @@
     <input type="checkbox" name="category" value="Screen Design">Screen Design
     <input type="checkbox" name="category" value="Artworks">Artworks
  -->
+    <button id="add-text-q">Add A Text Question</button>
+    <button id="add-vote-q">Add A Vote Question (inactive)</button>
+    <button id="add-url">Add A Link (inactive)</button>
+    <hr>
     <button class="btn btn-primary" id="save-new-poll-details" type="button" >Save!</button>
     <button class="btn btn-default" id="cancel-new-poll" type="button" >Cancel</button>
   </form>
@@ -79,13 +77,43 @@
 
 
 
+<!-- ---------   QUESTION DIVS   ---------------
+ -->
+<!--
 
+<div id="new-vote-q-form" class="hidden">
+  <form>
+    <input type="text" placeholder="project title" id="new-proj-title">
+    <br>
+    <input type="text" placeholder="project decription" id="new-proj-description">
 
-
-
-
-<button id="show-me-projects">Show all projects!</button>
-<div id="project-listing-div">
-  <table id="project-listing"></table>
-  <hr>
+    <button id="save-new-project-details" type="button" >Save!</button>
+    <button id="cancel-new-project" type="button" >Cancel</button>
+  </form>
 </div>
+ -->
+
+
+<div id="new-text-q-form" class="hidden">
+  <form>
+    <input type="text" placeholder="enter question text" id="new-text-q">
+    <br>
+    <button class="btn btn-primary" id="save-new-text-q" type="button" >Add Text Question!</button>
+    <button class="btn btn-default" id="cancel-new-ext-q" type="button" >Cancel</button>
+  </form>
+</div>
+
+
+
+<!--
+<div id="new-link-form" class="hidden">
+  <form>
+    <input type="text" placeholder="project title" id="new-proj-title">
+    <br>
+    <input type="text" placeholder="project decription" id="new-proj-description">
+
+    <button id="save-new-project-details" type="button" >Save!</button>
+    <button id="cancel-new-project" type="button" >Cancel</button>
+  </form>
+</div> -->
+
