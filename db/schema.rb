@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131209175018) do
+ActiveRecord::Schema.define(:version => 20131216230006) do
 
   create_table "banters", :force => true do |t|
     t.integer  "response_id"
@@ -92,6 +92,9 @@ ActiveRecord::Schema.define(:version => 20131209175018) do
     t.string   "country"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

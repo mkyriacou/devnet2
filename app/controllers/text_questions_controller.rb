@@ -1,7 +1,7 @@
 class TextQuestionsController < ApplicationController
 
   def index
-    @textQs = Text_Question.where("poll_id = ?", params[poll_id])
+    @textQs = Text_Question.where("poll_id = ?", params[:poll_id])
 
     respond_to do |format|
       format.json {render json: @textQs}
@@ -10,7 +10,7 @@ class TextQuestionsController < ApplicationController
   end
 
   def show
-      @textQ = Text_Question.find(params[:id])
+    @textQ = Text_Question.find(params[:id])
 
     respond_to do |format|
       format.json {render json: @textQ}
