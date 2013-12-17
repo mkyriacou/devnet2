@@ -1,0 +1,2 @@
+class BantersController < ApplicationController
+end

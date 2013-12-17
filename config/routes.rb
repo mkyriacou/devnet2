@@ -6,9 +6,12 @@ Devnet2::Application.routes.draw do
   resources :dashboards
   resources :projects do
     resources :polls do
-      resources :vote_questions
-      resources :text_questions
       resources :urllinks
+      resources :vote_questions
+      resources :text_questions do
+        resources :responses
+        resources :banter
+      end # questions
     end # polls
   end # projects
 

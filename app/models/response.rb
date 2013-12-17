@@ -4,6 +4,6 @@ class Response < ActiveRecord::Base
   belongs_to :vote_question, foreign_key: :question_id
   belongs_to :user, foreign_key: :reviewer_id
 
-  # belongs_to :text_question #LATER!!!
+  belongs_to :text_question
 
 end
