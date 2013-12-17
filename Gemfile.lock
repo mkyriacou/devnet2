@@ -31,6 +31,9 @@ GEM
     arel (3.0.3)
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
+    bootstrap-glyphicons (0.0.1)
+      railties (>= 3.0)
+      sass (>= 3.2)
     builder (3.0.4)
     coderay (1.1.0)
     coffee-rails (3.2.2)
@@ -65,6 +68,7 @@ GEM
     mime-types (1.25.1)
     multi_json (1.8.2)
     orm_adapter (0.5.0)
+    pg (0.17.0)
     polyglot (0.3.3)
     pry (0.9.12.3)
       coderay (~> 1.0)
@@ -138,10 +142,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootstrap-glyphicons
   coffee-rails (~> 3.2.1)
   devise
   factory_girl
   jquery-rails
+  pg
   pry
   rails (= 3.2.14)
   rspec-rails

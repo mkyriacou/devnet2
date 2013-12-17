@@ -1,23 +1,26 @@
-<h1> You are logged in and this is your own user space! </h1>
-<span class="glyphicon glyphicon-search"></span>
+<h1 class="center-text"> Welome to Silicon Rally! </h1>
+<hr>
+<center>
+  <button id="home-nav" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-home"></span>
+  </button>
 
-<button type="button" class="btn btn-default btn-lg">
-  <span class="glyphicon glyphicon-star"></span> Star
-</button>
-<button id="home-nav" class="btn btn-default btn-lg">
-  <span class="glyphicon glyphicon-home"></span>
-</button>
-<button id="new-project">Add A New Project</button>
-<button id="show-me-projects">Show all projects!</button>
+  <button id="new-project" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-list-alt"> New Project</span>
+  </button>
 
+  <button id="show-me-projects" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-list"> My projects! </span>
+  </button>
 
+  <button id="public-projects" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-globe"> Public Projects </span>
+  </button>
+</center>
+<hr>
 <!--     ---------------    PROJECT DIVS    ---------------
  -->
 
-<div id="project-listing-div" class="hidden">
-  <p>All Projects - inspecting as owner/visitor</p>
-  <table id="project-listing"></table>
-</div>
 
 <div id="selected-project" class="hidden">
   <p>Selected Project - inspecting as owner/visitor</p>
@@ -40,14 +43,14 @@
 </div>
 
 
+<div id="project-listing-div" class="hidden">
+  <p>All Projects - inspecting as owner/visitor</p>
+  <table id="project-listing"></table>
+</div>
+
 
 <!--   ---------------  POLL DIVS    ---------------
  -->
-
-<div id="all-project-polls" class="hidden">
-  <p>All Project Polls - inspecting as owner/visitor</p>
-  <table></table>
-</div>
 
 <div id="selected-poll" class="hidden">
   <p>Selected Poll - inspecting as owner/visitor</p>
@@ -78,6 +81,11 @@
 </div>
 
 
+<div id="all-project-polls" class="hidden">
+  <p>All Project Polls - inspecting as owner/visitor</p>
+  <table></table>
+</div>
+
 
 <!-- ---------   QUESTION DIVS   ---------------
  -->
@@ -107,7 +115,7 @@
 
 
 
-<div class="show-text-q">
+<div class="show-text-q hidden">
 
 </div>
 
@@ -129,7 +137,7 @@
 <!-- ---------   RESPONSE DIVS   ---------------
  -->
 
-<div class="">
+<div class="hidden">
 
 </div>
 

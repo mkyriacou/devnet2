@@ -8,6 +8,8 @@ $ ->
   currentProjectId = null
   currentPollId = null
 
+  mkStdDelay = 10000
+
   # set up functionalized tempates ... eventually should be the same template
   projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>""><%= thisProject.title %></button></tr>')
   # just deleted the div at the end of the proj template
@@ -16,13 +18,13 @@ $ ->
 
   # Naviage a user back to home state
   $("#home-nav").click ->
-    $("#project-listing-div").removeClass('hidden')
+    $("#project-listing-div").removeClass('hidden', mkStdDelay)
 
-    $("#selected-project").addClass('hidden')
-    $("#all-project-polls").addClass('hidden')
-    $("#selected-poll").addClass('hidden')
-    $("#new-project-form").addClass('hidden')
-    $("#new-poll-form").addClass('hidden')
+    $("#selected-project").addClass('hidden', mkStdDelay)
+    $("#all-project-polls").addClass('hidden', mkStdDelay)
+    $("#selected-poll").addClass('hidden', mkStdDelay)
+    $("#new-project-form").addClass('hidden', mkStdDelay)
+    $("#new-poll-form").addClass('hidden', mkStdDelay)
 
 
   # =====================================================
@@ -32,11 +34,11 @@ $ ->
   # KEY USE CASE:  Show all Projects for a User!
   # ================================================
   populateProjectList = () ->
-    $("#project-listing-div").removeClass('hidden')
+    $("#project-listing-div").removeClass('hidden', mkStdDelay)
 
-    $("#selected-project").addClass('hidden')
-    $("#all-project-polls").addClass('hidden')
-    $("#selected-poll").addClass('hidden')
+    $("#selected-project").addClass('hidden', mkStdDelay)
+    $("#all-project-polls").addClass('hidden', mkStdDelay)
+    $("#selected-poll").addClass('hidden', mkStdDelay)
 
     $.get '/projects', (allProjs) ->
       $('#project-listing').empty()
@@ -51,18 +53,18 @@ $ ->
   # ===================================
   # Make New Project Form visible
   $('#new-project').click ->
-    $('#new-project-form').removeClass('hidden')
-    $("#project-listing-div").removeClass('hidden')
+    $('#new-project-form').removeClass('hidden', mkStdDelay)
+    $("#project-listing-div").removeClass('hidden', mkStdDelay)
 
-    $("#selected-project").addClass('hidden')
-    $("#all-project-polls").addClass('hidden')
-    $("#selected-poll").addClass('hidden')
+    $("#selected-project").addClass('hidden', mkStdDelay)
+    $("#all-project-polls").addClass('hidden', mkStdDelay)
+    $("#selected-poll").addClass('hidden', mkStdDelay)
 
   # CANCEL New Project Form
   $('#cancel-new-project').click ->
     $('#new-proj-title').val("")
     $('#new-proj-description').val("")
-    $('#new-project-form').addClass('hidden')
+    $('#new-project-form').addClass('hidden', mkStdDelay)
 
   # SAVE New Project Form
   $('#save-new-project-details').click ->
@@ -73,7 +75,7 @@ $ ->
     console.log projDetails
     $('#new-proj-title').val("")
     $('#new-proj-description').val("")
-    $('#new-project-form').addClass('hidden')
+    $('#new-project-form').addClass('hidden', mkStdDelay)
 
     $.post '/projects',
       projDetails,
@@ -91,20 +93,20 @@ $ ->
     currentProjectId = $(this).attr('id')
     # get show - to grab all details and populate selected project div
     $.get '/projects/'+currentProjectId, (thisProject) ->
-      $('#new-poll-form').addClass('hidden')
-      $("#all-project-polls").addClass('hidden')
-      $("#selected-poll").addClass('hidden')
-      $("#new-project-form").addClass('hidden')
-      $("#project-listing-div").addClass('hidden')
+      $('#new-poll-form').addClass('hidden', mkStdDelay)
+      $("#all-project-polls").addClass('hidden', mkStdDelay)
+      $("#selected-poll").addClass('hidden', mkStdDelay)
+      $("#new-project-form").addClass('hidden', mkStdDelay)
+      $("#project-listing-div").addClass('hidden', mkStdDelay)
 
       $('#selected-project span').empty()
-      $('#selected-project').removeClass('hidden')
+      $('#selected-project').removeClass('hidden', mkStdDelay)
       $('#selected-project span').append("<li>PROJECT: "+thisProject[0].title + " - " + thisProject[0].description+"</li>")
 
       # now get the poll list for that project, as clickable buttons...
       $.get '/projects/'+currentProjectId+'/polls', (pollsForThisProject) ->
 
-        $("#all-project-polls").removeClass('hidden')
+        $("#all-project-polls").removeClass('hidden', mkStdDelay)
         if pollsForThisProject == []
           alert "empty state triggered"
           $('#selected-project').append("<p>ooops!  you don't have any polls yet - click add to create new poll</p>")
@@ -127,13 +129,13 @@ $ ->
 
   # Event trigger which starts use case and reveals previously hidden form
   $("#start-new-poll").click ->
-    $('#new-poll-form').removeClass('hidden')
-    $("#selected-project").removeClass('hidden')
+    $('#new-poll-form').removeClass('hidden', mkStdDelay)
+    $("#selected-project").removeClass('hidden', mkStdDelay)
 
-    $("#all-project-polls").addClass('hidden')
-    $("#selected-poll").addClass('hidden')
-    $("#new-project-form").addClass('hidden')
-    $("#project-listing-div").addClass('hidden')
+    $("#all-project-polls").addClass('hidden', mkStdDelay)
+    $("#selected-poll").addClass('hidden', mkStdDelay)
+    $("#new-project-form").addClass('hidden', mkStdDelay)
+    $("#project-listing-div").addClass('hidden', mkStdDelay)
 
     # SAVE button
     $('#save-new-poll-details').click ->
@@ -150,12 +152,12 @@ $ ->
     $('#cancel-new-poll').click ->
       $('#new-poll-title').val("")
       $('#new-poll-description').val("")
-      $('#new-poll-form').addClass('hidden')
+      $('#new-poll-form').addClass('hidden', mkStdDelay)
 
     # ADD TEXT QUESTION button
     $('#add-text-q').click ->
       event.preventDefault()
-      $('#new-text-q-form').removeClass('hidden')
+      $('#new-text-q-form').removeClass('hidden', mkStdDelay)
 
       #save q
       $('#save-new-text-q').click ->
@@ -170,7 +172,7 @@ $ ->
       #cancel q
       $('#cancel-new-text-q').click ->
         $('#new-text-q').val("")
-        $('#new-text-q-form').addClass('hidden')
+        $('#new-text-q-form').addClass('hidden', mkStdDelay)
 
 
 
@@ -179,11 +181,11 @@ $ ->
   # # When a poll - to be populated in the future - is clicked get ID and get more details
   $('#all-project-polls table').on "click", "button", ->
     alert "detected a click event on a delegate at poll level"
-    $("#selected-project").removeClass('hidden')
-    $("#selected-poll").removeClass('hidden')
+    $("#selected-project").removeClass('hidden', mkStdDelay)
+    $("#selected-poll").removeClass('hidden', mkStdDelay)
 
-    $("#all-project-polls").addClass('hidden')
-    $("#project-listing-div").addClass('hidden')
+    $("#all-project-polls").addClass('hidden', mkStdDelay)
+    $("#project-listing-div").addClass('hidden', mkStdDelay)
 
     currentPollId = $(this).attr('id')
     event.preventDefault()

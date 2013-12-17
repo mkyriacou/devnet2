@@ -7,7 +7,7 @@ gem 'rails', '3.2.14'
 
 gem 'sqlite3'
 gem 'devise'
-
+gem 'bootstrap-glyphicons'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -26,10 +26,17 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'rspec-rails'
   gem 'factory_girl'
+  gem 'sqlite3' #for development`
   gem 'pry'
 end
 
 gem 'jquery-rails'
+
+
+group :production do
+  gem 'pg' # for heroku as it doesn't accept sqllight3
+end
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
