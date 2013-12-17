@@ -80,17 +80,20 @@ $ ->
     $.post '/projects',
       projDetails,
       (responseData) ->
-        populateProjectList
+        currentProjectId = responseData.id
+        populateProjectSelected(currentProjectId)
 
+  # FIRST thing:  Populate the user page with their projects.  Even if it's invisible for now.
+  populateProjectList()
 
 
   # KEY USE CASE:  Select A Project To CRUD Details
   # ===========================================================================
 
-  #Event trigger  - when a project's button is pressed
-  $('table#project-listing').on "click", "button", ->
-    # get corresponding project id
-    currentProjectId = $(this).attr('id')
+
+  populateProjectSelected = (projectId) ->
+    # currentProjectId = projectId
+    alert "working with this as project id: "
     # get show - to grab all details and populate selected project div
     $.get '/projects/'+currentProjectId, (thisProject) ->
       $('#new-poll-form').addClass('hidden', mkStdDelay)
@@ -99,9 +102,12 @@ $ ->
       $("#new-project-form").addClass('hidden', mkStdDelay)
       $("#project-listing-div").addClass('hidden', mkStdDelay)
 
-      $('#selected-project span').empty()
+      $('#selected-project h3').empty()
+      $('#selected-project h4').empty()
       $('#selected-project').removeClass('hidden', mkStdDelay)
-      $('#selected-project span').append("<li>PROJECT: "+thisProject[0].title + " - " + thisProject[0].description+"</li>")
+      # unacceptable - put this into a template or JST!!
+      $('#selected-project h3').append("PROJECT: "+thisProject[0].title)
+      $('#selected-project h4').append(thisProject[0].description)
 
       # now get the poll list for that project, as clickable buttons...
       $.get '/projects/'+currentProjectId+'/polls', (pollsForThisProject) ->
@@ -115,6 +121,12 @@ $ ->
           for thisPoll in pollsForThisProject
             $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
 
+
+  #Event trigger  - when a project's button is pressed
+  $('table#project-listing').on "click", "button", ->
+    # get corresponding project id
+    currentProjectId = $(this).attr('id')
+    populateProjectSelected(currentProjectId)
 
 
   # =====================================================
@@ -143,7 +155,7 @@ $ ->
       $description = $('#new-poll-description').val()
       $project_id = currentProjectId
       newPollDetails = {details: {title: $title, description: $description, project_id: currentProjectId}}
-      alert "soon we will be posting a save of the following new poll: " + $title + " - " + $description
+      # alert "soon we will be posting a save of the following new poll: " + $title + " - " + $description
       $.post '/projects/'+currentProjectId+'/polls', (newPollDetails), (successData) ->
         alert "got back " + successData.title
         alert "current project id is " +currentProjectId
@@ -174,24 +186,27 @@ $ ->
         $('#new-text-q').val("")
         $('#new-text-q-form').addClass('hidden', mkStdDelay)
 
-
-
-  # Key Use Case:  SELECT A POLL and GET QUESTIONS
-  # =====================================================
-  # # When a poll - to be populated in the future - is clicked get ID and get more details
-  $('#all-project-polls table').on "click", "button", ->
-    alert "detected a click event on a delegate at poll level"
+  populatePollSelected = (pollId) ->
+    currentPollId = pollId
     $("#selected-project").removeClass('hidden', mkStdDelay)
     $("#selected-poll").removeClass('hidden', mkStdDelay)
 
     $("#all-project-polls").addClass('hidden', mkStdDelay)
     $("#project-listing-div").addClass('hidden', mkStdDelay)
 
-    currentPollId = $(this).attr('id')
-    event.preventDefault()
     $.get '/projects/'+currentProjectId+'/polls/'+currentPollId, (thisPoll) ->
       $('#selected-poll span').empty()
       $('#selected-poll span').append('<hr>'+thisPoll.title+' - '+thisPoll.description+'<hr>')
+
+
+  # Key Use Case:  SELECT A POLL and GET QUESTIONS
+  # =====================================================
+  # # When a poll - to be populated in the future - is clicked get ID and get more details
+  $('#all-project-polls table').on "click", "button", ->
+    currentPollId = $(this).attr('id')
+    event.preventDefault()
+
+    populatePollSelected(currentPollId)
 
 
   # =====================================================
