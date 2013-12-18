@@ -1,4 +1,4 @@
-class TextQuestion < ActiveRecord::Base
+  class TextQuestion < ActiveRecord::Base
   attr_accessible :poll_id, :question_text
 
   belongs_to :poll

@@ -19,12 +19,34 @@ $ ->
   # Naviage a user back to home state
   $("#home-nav").click ->
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
+    $('#new-project').removeClass('hidden', mkStdDelay)
+    $('#show-me-projects').removeClass('hidden', mkStdDelay)
+    $('#community-btn').removeClass('hidden', mkStdDelay)
 
+    $('#all-polls').addClass('hidden', mkStdDelay)
     $("#selected-project").addClass('hidden', mkStdDelay)
     $("#all-project-polls").addClass('hidden', mkStdDelay)
     $("#selected-poll").addClass('hidden', mkStdDelay)
     $("#new-project-form").addClass('hidden', mkStdDelay)
     $("#new-poll-form").addClass('hidden', mkStdDelay)
+    $('#all-poll-questions').addClass('hidden', mkStdDelay)
+
+    $('#all-users').addClass('hidden', mkStdDelay)
+    $('#all-projects').addClass('hidden', mkStdDelay)
+    $('#all-polls').addClass('hidden', mkStdDelay)
+
+
+  $('#community-btn').click ->
+    $('#all-users').removeClass('hidden', mkStdDelay)
+    $('#all-projects').removeClass('hidden', mkStdDelay)
+    $('#all-polls').removeClass('hidden', mkStdDelay)
+
+    $("#selected-project").addClass('hidden', mkStdDelay)
+    $("#project-listing-div").addClass('hidden', mkStdDelay)
+    $('#show-me-projects').addClass('hidden', mkStdDelay)
+    $('#community-btn').addClass('hidden', mkStdDelay)
+    $('#new-project').addClass('hidden', mkStdDelay)
+    $('#show-me-projects').addClass('hidden', mkStdDelay)
 
 
   # =====================================================
@@ -39,6 +61,7 @@ $ ->
     $("#selected-project").addClass('hidden', mkStdDelay)
     $("#all-project-polls").addClass('hidden', mkStdDelay)
     $("#selected-poll").addClass('hidden', mkStdDelay)
+    $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
     $.get '/projects', (allProjs) ->
       $('#project-listing').empty()
@@ -59,6 +82,7 @@ $ ->
     $("#selected-project").addClass('hidden', mkStdDelay)
     $("#all-project-polls").addClass('hidden', mkStdDelay)
     $("#selected-poll").addClass('hidden', mkStdDelay)
+    $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
   # CANCEL New Project Form
   $('#cancel-new-project').click ->
@@ -91,9 +115,10 @@ $ ->
   # ===========================================================================
 
 
+
   populateProjectSelected = (projectId) ->
     # currentProjectId = projectId
-    alert "working with this as project id: "
+    # alert "working with this as project id: "
     # get show - to grab all details and populate selected project div
     $.get '/projects/'+currentProjectId, (thisProject) ->
       $('#new-poll-form').addClass('hidden', mkStdDelay)
@@ -101,6 +126,7 @@ $ ->
       $("#selected-poll").addClass('hidden', mkStdDelay)
       $("#new-project-form").addClass('hidden', mkStdDelay)
       $("#project-listing-div").addClass('hidden', mkStdDelay)
+      $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
       $('#selected-project h3').empty()
       $('#selected-project h4').empty()
@@ -119,7 +145,12 @@ $ ->
         else
           $('#all-project-polls table').empty()
           for thisPoll in pollsForThisProject
-            $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
+            $('#all-project-polls').append(pollTemplate(thisPoll: thisPoll))
+
+
+  $('#view-all-polls').click ->
+    if currentProjectId != null
+      populateProjectSelected(currentProjectId)
 
 
   #Event trigger  - when a project's button is pressed
@@ -144,6 +175,7 @@ $ ->
     $('#new-poll-form').removeClass('hidden', mkStdDelay)
     $("#selected-project").removeClass('hidden', mkStdDelay)
 
+    $('#all-poll-questions').addClass('hidden', mkStdDelay)
     $("#all-project-polls").addClass('hidden', mkStdDelay)
     $("#selected-poll").addClass('hidden', mkStdDelay)
     $("#new-project-form").addClass('hidden', mkStdDelay)
@@ -166,7 +198,40 @@ $ ->
       $('#new-poll-description').val("")
       $('#new-poll-form').addClass('hidden', mkStdDelay)
 
-    # ADD TEXT QUESTION button
+
+  populatePollSelected = (pollId) ->
+    currentPollId = pollId
+    $("#selected-project").removeClass('hidden', mkStdDelay)
+    $("#selected-poll").removeClass('hidden', mkStdDelay)
+    $('#all-poll-questions').removeClass('hidden', mkStdDelay)
+    $('#poll-builder-buttons').removeClass('hidden', mkStdDelay)
+
+    $("#all-project-polls").addClass('hidden', mkStdDelay)
+    $("#project-listing-div").addClass('hidden', mkStdDelay)
+
+    # Get poll details
+    $.get '/projects/'+currentProjectId+'/polls/'+currentPollId, (thisPoll) ->
+      $('#selected-poll h4').empty()
+      $('#selected-poll h5').empty()
+
+      $('#selected-poll h4').append('<hr>SURVEY:  '+thisPoll.title)
+      $('#selected-poll h5').append(thisPoll.description+'<hr>')
+
+    # Get questions so far
+    $.get '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_questions', (successData) ->
+      console.log successData
+      $('#all-poll-questions table').empty()
+      $('#all-poll-questions').removeClass('hidden', mkStdDelay)
+      $('#all-poll-questions table').append('<hr>')
+      qNum = 1
+      for thisQuestion in successData
+        # IMPORTANT!  CONVERT TO JST !!
+        $('#all-poll-questions table').append("<tr><td>"+qNum+".  "+thisQuestion.question_text+"<hr></td></tr>")
+        qNum++
+
+
+    # KEY USE CASE:  ADD QUESTION to a poll
+    # =========================================
     $('#add-text-q').click ->
       event.preventDefault()
       $('#new-text-q-form').removeClass('hidden', mkStdDelay)
@@ -176,36 +241,29 @@ $ ->
         $newTextQ = $('#new-text-q').val()
         $pollId = currentPollId
         newQDetails = {details: {poll_id: $pollId, question_text: $newTextQ}}
-        alert "will save soon!"
-        $.post '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_question', (newQDetails), (successData) ->
-          alert "check console now!"
+        console.log newQDetails
+        $.post '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_questions', (newQDetails), (successData) ->
+          alert "Just Saved " + successData.question_text
           console.log successData
+          $('#new-text-q').val("")
+          $('#new-text-q-form').addClass('hidden', mkStdDelay)
+          populatePollSelected(currentPollId)
 
       #cancel q
       $('#cancel-new-text-q').click ->
+        alert "should dissapear"
         $('#new-text-q').val("")
+
         $('#new-text-q-form').addClass('hidden', mkStdDelay)
 
-  populatePollSelected = (pollId) ->
-    currentPollId = pollId
-    $("#selected-project").removeClass('hidden', mkStdDelay)
-    $("#selected-poll").removeClass('hidden', mkStdDelay)
 
-    $("#all-project-polls").addClass('hidden', mkStdDelay)
-    $("#project-listing-div").addClass('hidden', mkStdDelay)
-
-    $.get '/projects/'+currentProjectId+'/polls/'+currentPollId, (thisPoll) ->
-      $('#selected-poll span').empty()
-      $('#selected-poll span').append('<hr>'+thisPoll.title+' - '+thisPoll.description+'<hr>')
 
 
   # Key Use Case:  SELECT A POLL and GET QUESTIONS
   # =====================================================
   # # When a poll - to be populated in the future - is clicked get ID and get more details
-  $('#all-project-polls table').on "click", "button", ->
+  $('#all-project-polls').on "click", "button", ->
     currentPollId = $(this).attr('id')
-    event.preventDefault()
-
     populatePollSelected(currentPollId)
 
 
@@ -214,17 +272,6 @@ $ ->
   # =====================================================
 
 
-    # now get ALL the questions ascociated with this poll.
-    #
-    #
-    #
-    #
-    alert "about to get all questions"
-    $.get '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_question', (successData) ->
-      console.log successData
-      for thisQuestion in successData
-        alert "just retreived from db " + thisQuestion.question_text
-        console.log thisQuestion
 
 
 
