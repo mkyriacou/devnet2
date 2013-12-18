@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131216230006) do
+ActiveRecord::Schema.define(:version => 20131218085543) do
 
   create_table "banters", :force => true do |t|
     t.integer  "response_id"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20131216230006) do
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.boolean  "public_proj"
   end
 
   create_table "responses", :force => true do |t|

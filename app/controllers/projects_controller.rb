@@ -30,5 +30,18 @@ class ProjectsController < ApplicationController
 
   end
 
+  def publicproj
+    # non-RESTful but nessesary for this app
+
+    projects = Project.where(:public_proj => true)
+    @projects = projects.sort_by { |k| k[:created_at] }.reverse
+
+    respond_to do |format|
+      format.json {render json: @projects}
+    end
+
+
+  end
+
 
 end

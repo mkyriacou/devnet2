@@ -11,13 +11,19 @@ $ ->
   mkStdDelay = 10000
 
   # set up functionalized tempates ... eventually should be the same template
-  projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>""><%= thisProject.title %></button></tr>')
+  projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
+
+  publicProjTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
+
   # just deleted the div at the end of the proj template
-  pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>""><%= thisPoll.title %></button></tr>')
+  pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
+
+  publicPollTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
 
 
   # Naviage a user back to home state
   $("#home-nav").click ->
+    $("#main-title").html("Welome to your Silicon Rally Projects Page")
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
     $('#new-project').removeClass('hidden', mkStdDelay)
     $('#show-me-projects').removeClass('hidden', mkStdDelay)
@@ -37,6 +43,7 @@ $ ->
 
 
   $('#community-btn').click ->
+    $("#main-title").html("Explore creative works by the community...")
     $('#all-users').removeClass('hidden', mkStdDelay)
     $('#all-projects').removeClass('hidden', mkStdDelay)
     $('#all-polls').removeClass('hidden', mkStdDelay)
@@ -47,6 +54,35 @@ $ ->
     $('#community-btn').addClass('hidden', mkStdDelay)
     $('#new-project').addClass('hidden', mkStdDelay)
     $('#show-me-projects').addClass('hidden', mkStdDelay)
+
+
+  # =====================================================
+  # =====================================================
+  # =====================================================
+
+  # KEY USE CASE:  Show all PUBLIC Projects
+  # ================================================
+
+  $('#all-projects').click ->
+    # Similar to populate project list but needs to feel different
+    $('#community-container').empty()
+    $('#community-container').removeClass('hidden')
+    $.get '/projects/publicproj', (successData) ->
+      for thisProject in successData
+        $('#community-container').append(publicProjTemplate({thisProject: thisProject}))
+
+
+  # KEY USE CASE:  Show all PUBLIC Polls
+  # ================================================
+
+  $('#all-polls').click ->
+    $('#community-container').empty()
+    $('#community-container').removeClass('hidden')
+    $.get '/polls/publicpolls', (successData) ->
+      alert "check console"
+      console.log "the whole return "+successData
+      for thisPoll in successData
+        $('#community-container').append(publicPollTemplate({thisPoll: thisPoll}))
 
 
   # =====================================================
@@ -94,8 +130,18 @@ $ ->
   $('#save-new-project-details').click ->
     $title = $('#new-proj-title').val()
     $description = $('#new-proj-description').val()
+
+  # $( "input[name=public_proj]" ).click ->
+    if $( "input:checked" ).val() == "public"
+      $public_proj = true
+      alert "its public"
+    else
+      $public_proj = false
+      alert "its private"
+
+
     $userId = $("#owner").val()
-    projDetails = {details: {title: $title, description: $description, user_id: $userId}}
+    projDetails = {details: {title: $title, description: $description, public_proj: $public_proj, user_id: $userId}}
     console.log projDetails
     $('#new-proj-title').val("")
     $('#new-proj-description').val("")
@@ -138,7 +184,7 @@ $ ->
       # now get the poll list for that project, as clickable buttons...
       $.get '/projects/'+currentProjectId+'/polls', (pollsForThisProject) ->
 
-        $("#all-project-polls").removeClass('hidden', mkStdDelay)
+        $("#all-project-polls").empty().removeClass('hidden', mkStdDelay)
         if pollsForThisProject == []
           alert "empty state triggered"
           $('#selected-project').append("<p>ooops!  you don't have any polls yet - click add to create new poll</p>")
@@ -265,6 +311,11 @@ $ ->
   $('#all-project-polls').on "click", "button", ->
     currentPollId = $(this).attr('id')
     populatePollSelected(currentPollId)
+
+# ===================================================================================
+# NEXT ITEM RIGHT HERE!!!!
+# MK next step: don't hve different divs, just switch classes on the same id to reuse
+# ===================================================================================
 
 
   # =====================================================

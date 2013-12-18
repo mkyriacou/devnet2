@@ -33,6 +33,28 @@ margin-right: auto;
   background:#b2ffd6;
 }
 
+#app-title {
+  text-align: center;
+  text-color: #1240ab;
+  font-size: 18px;
+}
+
+#loginout {
+  text-align: right;
+  font-size: 10px;
+}
+
+a:visited {
+  color:#1240ab;
+  text-decoration:none;
+}
+a:link {
+  color:#1240ab;
+  text-decoration:none;
+}
+
+
+
 </style>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
@@ -50,10 +72,11 @@ margin-right: auto;
 
   <div id="user_nav">
     <% if user_signed_in? %>
-      Signed in as <%= current_user.email %>. Not you?
-      <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+      <span id="app-title">Welcome to Silicon Rally!</span><br>
+      <span id="loginout">Not <%= current_user.email %>?
+      <%= link_to "Sign out", destroy_user_session_path, :method => :delete %></span>
     <% else %>
-      <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
+      <button class="btn btn-info"><%= link_to "Sign up", new_user_registration_path %></button> <button class="btn btn-default"><%= link_to "sign in", new_user_session_path %></button>
     <% end %>
   </div>
 

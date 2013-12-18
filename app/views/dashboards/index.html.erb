@@ -1,4 +1,4 @@
-<h1 class="center-text"> Welome to Silicon Rally! </h1>
+<h3 id="main-title" class="center-text"></h3>
 <hr>
 <center>
   <button id="home-nav" class="btn btn-primary btn-lg">
@@ -63,14 +63,16 @@
     <br>
     <input type="text" placeholder="project decription" id="new-proj-description">
     <br>
-    <input type="checkbox" name="public" value="true"> Public Project
+    <input type="radio" name="public_proj" value="public"> Public Project<br>
+    <input type="radio" name="public_proj" value="private"> Visible only to Invitees
     <br>
     <input type="hidden" name="user_id" id="owner" value=<%= current_user.id %>>
-
-    <button id="save-new-project-details" type="button" >Save!</button>
-    <button id="cancel-new-project" type="button" >Cancel</button>
+    <hr>
+    <button id="save-new-project-details" type="button" class="btn btn-primary">Save!</button>
+    <button id="cancel-new-project" type="button" class="btn btn-default">Cancel</button>
   </form>
 </div>
+
 
 
 <div id="project-listing-div" class="hidden">

@@ -3,6 +3,9 @@ Devnet2::Application.routes.draw do
 
   root to: "homes#index"
 
+  get '/projects/publicproj' => "projects#publicproj"
+  get '/polls/publicpolls' => "polls#publicpolls"
+
   resources :dashboards
   resources :projects do
     resources :polls do

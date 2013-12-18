@@ -27,5 +27,25 @@ end
     end
   end
 
+  def publicpolls
+    # Is there a better way of doing this???
+    all_public_projects = Project.where(:public_proj => true)
+
+    # @all_public_polls = []
+    # all_public_projects.each do |this_pub_proj|
+    #   @all_public_polls << this_pub_proj.polls.find(:all)
+    # end
+
+    @all_public_polls = []
+    all_public_projects.each do |this_pub_proj|
+      if this_pub_proj.polls.length > 0
+        @all_public_polls.concat(this_pub_proj.polls)
+      end
+    end
+
+    respond_to do |format|
+      format.json {render json: @all_public_polls}
+    end
+  end
 
 end
