@@ -1,7 +1,16 @@
 Devnet2::Application.routes.draw do
-  devise_for :users
+  # devise_for :users
+
+  # updated this line to use customised user controller
+  devise_for :users, :controllers => { :sessions => 'users/sessions' }
 
   root to: "homes#index"
+
+  # The RESTbusters
+  get '/users/:id' => "users#details"
+  # get '/projects' => "projects#details"
+  get '/polls/:id' => "projects#details"
+
 
   get '/projects/publicproj' => "projects#publicproj"
   get '/polls/publicpolls' => "polls#publicpolls"

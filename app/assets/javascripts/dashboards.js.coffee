@@ -4,21 +4,42 @@
 
 $ ->
 
-  #first set two global vars until I find a better way to do this
+  #first set some ugly global vars until I use Angular to optimize
   currentProjectId = null
+  currentProjectOwnerId = null
+
   currentPollId = null
+  currentPollOwnerId = null
+
   currentUserId = $('#user-data userid').text()
   currentUserName = $('#user-data username').text()
 
-  mkStdDelay = 10000
+  mkStdDelay = 1000
 
   # set up functionalized tempates ... eventually should be the same template
   projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
   pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
 
-  # public temeplates
-  # publicProjTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
-  # publicPollTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
+  # Define new primitive based on custom routes
+  getModelData = (thisController, thisId) ->
+    # assumes you have the correct controller name and id, otherwise all bets are off!
+    successData = null
+    alert 'trying this: /'+thisController+'/'+thisId
+    $.get '/'+thisController+'/'+thisId, (successData) ->
+      return successData
+
+  getProjFromPollId = (pollId) ->
+    # PRE:  poll_id
+    # POST: corresponding project instance
+    projId = getModelData(polls, pollId).project_id
+    getModelData(projects, projId)
+
+
+  getOwnerFromPollId = (pollId) ->
+    # PRE:  poll_id
+    # POST: corresponding user instance
+    getProjFromPollId(pollId).user_id
+
 
 
   # Naviage a user back to home state
@@ -130,6 +151,11 @@ $ ->
 
 
 
+  # FIRST thing after page load:  Populate the user page with their projects.  Even if it's invisible for now.
+  populateProjectList(false)
+
+
+
 
 
 
@@ -140,8 +166,8 @@ $ ->
 
   # KEY USE CASE:  Create a new project
   # ===================================
-  # Make New Project Form visible
   $('#new-project').click ->
+    # Make New Project Form visible
     $('#new-project-form').removeClass('hidden', mkStdDelay)
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
 
@@ -150,41 +176,37 @@ $ ->
     $("#selected-poll").addClass('hidden', mkStdDelay)
     $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
-  # CANCEL New Project Form
-  $('#cancel-new-project').click ->
-    $('#new-proj-title').val("")
-    $('#new-proj-description').val("")
-    $('#new-project-form').addClass('hidden', mkStdDelay)
+    # CANCEL New Project Form
+    $('#cancel-new-project').click ->
+      $('#new-proj-title').val("")
+      $('#new-proj-description').val("")
+      $('#new-project-form').addClass('hidden', mkStdDelay)
 
-  # SAVE New Project Form
-  $('#save-new-project-details').click ->
-    $title = $('#new-proj-title').val()
-    $description = $('#new-proj-description').val()
+    # SAVE New Project Form
+    $('#save-new-project-details').click ->
+      $title = $('#new-proj-title').val()
+      $description = $('#new-proj-description').val()
 
-  # $( "input[name=public_proj]" ).click ->
-    if $( "input:checked" ).val() == "public"
-      $public_proj = true
-      alert "its public"
-    else
-      $public_proj = false
-      alert "its private"
+      if $( "input:checked" ).val() == "public"
+        $public_proj = true
+        alert "its public"
+      else
+        $public_proj = false
+        alert "its private"
 
+      $userId = $("#owner").val()
+      projDetails = {details: {title: $title, description: $description, public_proj: $public_proj, user_id: $userId}}
+      console.log projDetails
+      $('#new-proj-title').val("")
+      $('#new-proj-description').val("")
+      $('#new-project-form').addClass('hidden', mkStdDelay)
 
-    $userId = $("#owner").val()
-    projDetails = {details: {title: $title, description: $description, public_proj: $public_proj, user_id: $userId}}
-    console.log projDetails
-    $('#new-proj-title').val("")
-    $('#new-proj-description').val("")
-    $('#new-project-form').addClass('hidden', mkStdDelay)
+      $.post '/projects',
+        projDetails,
+        (responseData) ->
+          currentProjectId = responseData.id
+          populateProjectSelected(currentProjectId)
 
-    $.post '/projects',
-      projDetails,
-      (responseData) ->
-        currentProjectId = responseData.id
-        populateProjectSelected(currentProjectId)
-
-  # FIRST thing:  Populate the user page with their projects.  Even if it's invisible for now.
-  populateProjectList(false)
 
 
   # KEY USE CASE:  Select A Project To CRUD Details
@@ -221,7 +243,29 @@ $ ->
         else
           $('#all-project-polls table').empty()
           for thisPoll in pollsForThisProject
-            $('#all-project-polls').append(pollTemplate(thisPoll: thisPoll))
+            $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
+      alert +currentUserId+" "+thisProject[0].user_id
+      if +currentUserId == +thisProject[0].user_id
+        $('#selected-project p').empty().html("Browsing YOUR OWN project...")
+        $('#start-new-poll').removeClass('hidden')
+        alert "this is yours"
+      else
+        ownerName = getModelData('users', thisProject[0].user_id).name
+        console.log ownerName
+        alert "check console"
+        $('#selected-project p').empty().html("Browsing a project by user "+ownerName)
+        $('#start-new-poll').addClass('hidden')
+        alert "browsing comunity"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
 
 
   $('#view-all-polls').click ->
@@ -267,6 +311,9 @@ $ ->
       $.post '/projects/'+currentProjectId+'/polls', (newPollDetails), (successData) ->
         alert "got back " + successData.title
         alert "current project id is " +currentProjectId
+        $('#new-poll-title').val("")
+        $('#new-poll-description').val("")
+        $('#new-poll-form').addClass('hidden', mkStdDelay)
 
     # CANCEL button
     $('#cancel-new-poll').click ->

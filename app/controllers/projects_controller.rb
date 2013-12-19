@@ -40,8 +40,16 @@ class ProjectsController < ApplicationController
       format.json {render json: @projects}
     end
 
-
   end
+
+
+  # def details
+  #   @project_details = Project.find(params[:id])
+
+  #   respond_to do |format|
+  #     format.json {render json: @project_details}
+  #   end
+  # end
 
 
 end
