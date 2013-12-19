@@ -7,6 +7,8 @@ $ ->
   #first set two global vars until I find a better way to do this
   currentProjectId = null
   currentPollId = null
+  currentUserId = $('#user-data userid').text()
+  currentUserName = $('#user-data username').text()
 
   mkStdDelay = 10000
 
@@ -15,8 +17,8 @@ $ ->
   pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
 
   # public temeplates
-  publicProjTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
-  publicPollTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
+  # publicProjTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
+  # publicPollTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
 
 
   # Naviage a user back to home state
@@ -29,7 +31,7 @@ $ ->
     $("#selected-poll").removeClass('community').addClass('own')
 
     # Make desired divs appear
-    $("#main-title").html("<%= current_user.name %>'s Apps and Projects")
+    $("#main-title").html(currentUserName+"'s own Apps and Projects")
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
     $('#new-project').removeClass('hidden', mkStdDelay)
     $('#show-me-projects').removeClass('hidden', mkStdDelay)
@@ -57,11 +59,6 @@ $ ->
     $("#all-project-polls").removeClass('own').addClass('community')
     $("#selected-poll").removeClass('own').addClass('community')
 
-
-
-
-
-
     # Make desired divs appear
     $("#main-title").html("Apps by fellow creators...")
     $('#all-users').removeClass('hidden', mkStdDelay)
@@ -85,8 +82,10 @@ $ ->
 
 
   $('#all-projects').click ->
+    # $('#project-listing-div').addClass('hidden')
     public_flag = true
     populateProjectList(public_flag)
+    $('#project-listing button').removeClass('btn-primary').addClass('btn-success')
 
 
 
