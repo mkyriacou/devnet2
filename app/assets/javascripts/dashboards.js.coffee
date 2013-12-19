@@ -12,23 +12,30 @@ $ ->
 
   # set up functionalized tempates ... eventually should be the same template
   projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
-
-  publicProjTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
-
-  # just deleted the div at the end of the proj template
   pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
 
+  # public temeplates
+  publicProjTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
   publicPollTemplate = _.template('<hr><tr><button class="btn btn-success" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
 
 
   # Naviage a user back to home state
   $("#home-nav").click ->
-    $("#main-title").html("Welome to your Silicon Rally Projects Page")
+
+    # Switch Div modes
+    $("#project-listing-div").removeClass('community').addClass('own')
+    $("#selected-project").removeClass('community').addClass('own')
+    $("#all-project-polls").removeClass('community').addClass('own')
+    $("#selected-poll").removeClass('community').addClass('own')
+
+    # Make desired divs appear
+    $("#main-title").html("<%= current_user.name %>'s Apps and Projects")
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
     $('#new-project').removeClass('hidden', mkStdDelay)
     $('#show-me-projects').removeClass('hidden', mkStdDelay)
     $('#community-btn').removeClass('hidden', mkStdDelay)
 
+    # Hide irrelevant divs
     $('#all-polls').addClass('hidden', mkStdDelay)
     $("#selected-project").addClass('hidden', mkStdDelay)
     $("#all-project-polls").addClass('hidden', mkStdDelay)
@@ -43,7 +50,20 @@ $ ->
 
 
   $('#community-btn').click ->
-    $("#main-title").html("Explore creative works by the community...")
+
+    # Switch Div modes
+    $("#project-listing-div").removeClass('own').addClass('community')
+    $("#selected-project").removeClass('own').addClass('community')
+    $("#all-project-polls").removeClass('own').addClass('community')
+    $("#selected-poll").removeClass('own').addClass('community')
+
+
+
+
+
+
+    # Make desired divs appear
+    $("#main-title").html("Apps by fellow creators...")
     $('#all-users').removeClass('hidden', mkStdDelay)
     $('#all-projects').removeClass('hidden', mkStdDelay)
     $('#all-polls').removeClass('hidden', mkStdDelay)
@@ -63,27 +83,24 @@ $ ->
   # KEY USE CASE:  Show all PUBLIC Projects
   # ================================================
 
+
   $('#all-projects').click ->
-    # Similar to populate project list but needs to feel different
-    $('#community-container').empty()
-    $('#community-container').removeClass('hidden')
-    $.get '/projects/publicproj', (successData) ->
-      for thisProject in successData
-        $('#community-container').append(publicProjTemplate({thisProject: thisProject}))
+    public_flag = true
+    populateProjectList(public_flag)
+
+
 
 
   # KEY USE CASE:  Show all PUBLIC Polls
   # ================================================
 
   $('#all-polls').click ->
-    $('#community-container').empty()
-    $('#community-container').removeClass('hidden')
+    $('#all-project-polls table').empty()
     $.get '/polls/publicpolls', (successData) ->
-      alert "check console"
-      console.log "the whole return "+successData
       for thisPoll in successData
-        $('#community-container').append(publicPollTemplate({thisPoll: thisPoll}))
-
+        $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
+      $('#all-project-polls table button').removeClass('btn-primary').addClass('btn-success')
+      $('#all-project-polls').removeClass('hidden')
 
   # =====================================================
   # =====================================================
@@ -91,7 +108,10 @@ $ ->
 
   # KEY USE CASE:  Show all Projects for a User!
   # ================================================
-  populateProjectList = () ->
+  populateProjectList = (public_flag) ->
+    # PRE:  We use a boolean switch:  public_flag.  We make a different ajax call based on
+    #       where we need to take the input from
+
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
 
     $("#selected-project").addClass('hidden', mkStdDelay)
@@ -99,13 +119,24 @@ $ ->
     $("#selected-poll").addClass('hidden', mkStdDelay)
     $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
-    $.get '/projects', (allProjs) ->
+    if public_flag == true
+      route_string = '/projects/publicproj'
+    else
+      route_string = '/projects'
+
+    $.get route_string, (allProjs) ->
       $('#project-listing').empty()
       for thisProject in allProjs
         $('#project-listing').append(projTemplate({thisProject: thisProject}))
 
+
+
+
+
+
   $('#show-me-projects').click ->
-    populateProjectList()
+    public_flag = false
+    populateProjectList(public_flag)
 
 
   # KEY USE CASE:  Create a new project
@@ -154,7 +185,7 @@ $ ->
         populateProjectSelected(currentProjectId)
 
   # FIRST thing:  Populate the user page with their projects.  Even if it's invisible for now.
-  populateProjectList()
+  populateProjectList(false)
 
 
   # KEY USE CASE:  Select A Project To CRUD Details
@@ -184,7 +215,7 @@ $ ->
       # now get the poll list for that project, as clickable buttons...
       $.get '/projects/'+currentProjectId+'/polls', (pollsForThisProject) ->
 
-        $("#all-project-polls").empty().removeClass('hidden', mkStdDelay)
+        $("#all-project-polls table").empty().removeClass('hidden', mkStdDelay)
         if pollsForThisProject == []
           alert "empty state triggered"
           $('#selected-project').append("<p>ooops!  you don't have any polls yet - click add to create new poll</p>")
@@ -316,7 +347,10 @@ $ ->
 # NEXT ITEM RIGHT HERE!!!!
 # MK next step: don't hve different divs, just switch classes on the same id to reuse
 # ===================================================================================
-
+# 1. make a dve for own and a div for foreign
+# 2. apply switches to the same divs so there is no duplication
+# 3. display if visitor or not
+# 4. if visitor and not already completed, have a nice fat button prompting to fill out
 
   # =====================================================
   # =====================================================
