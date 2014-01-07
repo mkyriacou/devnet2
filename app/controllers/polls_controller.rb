@@ -48,12 +48,13 @@ end
     end
   end
 
+  # uncomment this after demo
   def details
-    @poll_details = Poll.find(params[:id])
+    # @poll_details = Poll.find(params[:id])
 
-    respond_to do |format|
-      format.json {render json: @poll_details}
-    end
+    # respond_to do |format|
+    #   format.json {render json: @poll_details}
+    # end
   end
 
 

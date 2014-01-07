@@ -9,11 +9,11 @@ Devnet2::Application.routes.draw do
   # The RESTbusters
   get '/users/:id' => "users#details"
   # get '/projects' => "projects#details"
-  get '/polls/:id' => "projects#details"
+  get '/polls/:id' => "polls#details"
 
 
   get '/projects/publicproj' => "projects#publicproj"
-  get '/polls/publicpolls' => "polls#publicpolls"
+  get '/publicpolls' => "polls#publicpolls"
 
   resources :dashboards
   resources :projects do

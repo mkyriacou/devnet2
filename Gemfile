@@ -5,7 +5,7 @@ gem 'rails', '3.2.14'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+# gem 'sqlite3'
 gem 'devise'
 gem 'bootstrap-glyphicons'
 
@@ -27,6 +27,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl'
   gem 'sqlite3' #for development`
+  # gem 'pg'
   gem 'pry'
 end
 

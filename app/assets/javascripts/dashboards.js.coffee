@@ -11,6 +11,7 @@ $ ->
   currentPollId = null
   currentPollOwnerId = null
 
+
   currentUserId = $('#user-data userid').text()
   currentUserName = $('#user-data username').text()
 
@@ -79,6 +80,7 @@ $ ->
     $("#selected-project").removeClass('own').addClass('community')
     $("#all-project-polls").removeClass('own').addClass('community')
     $("#selected-poll").removeClass('own').addClass('community')
+    $('#all-poll-questions').addClass('community')
 
     # Make desired divs appear
     $("#main-title").html("Apps by fellow creators...")
@@ -86,6 +88,7 @@ $ ->
     $('#all-projects').removeClass('hidden', mkStdDelay)
     $('#all-polls').removeClass('hidden', mkStdDelay)
 
+    $('#all-poll-questions').addClass('hidden', mkStdDelay)
     $("#selected-project").addClass('hidden', mkStdDelay)
     $("#project-listing-div").addClass('hidden', mkStdDelay)
     $('#show-me-projects').addClass('hidden', mkStdDelay)
@@ -116,7 +119,7 @@ $ ->
 
   $('#all-polls').click ->
     $('#all-project-polls table').empty()
-    $.get '/polls/publicpolls', (successData) ->
+    $.get '/publicpolls', (successData) ->
       for thisPoll in successData
         $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
       $('#all-project-polls table button').removeClass('btn-primary').addClass('btn-success')
@@ -224,7 +227,8 @@ $ ->
       $("#selected-poll").addClass('hidden', mkStdDelay)
       $("#new-project-form").addClass('hidden', mkStdDelay)
       $("#project-listing-div").addClass('hidden', mkStdDelay)
-      $('#all-poll-questions').addClass('hidden', mkStdDelay)
+
+      $('#all-poll-questions').removeClass('hidden', mkStdDelay)
 
       $('#selected-project h3').empty()
       $('#selected-project h4').empty()
@@ -244,15 +248,15 @@ $ ->
           $('#all-project-polls table').empty()
           for thisPoll in pollsForThisProject
             $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
-      alert +currentUserId+" "+thisProject[0].user_id
+      # alert +currentUserId+" "+thisProject[0].user_id
       if +currentUserId == +thisProject[0].user_id
         $('#selected-project p').empty().html("Browsing YOUR OWN project...")
         $('#start-new-poll').removeClass('hidden')
-        alert "this is yours"
+        # alert "this is yours"
       else
         ownerName = getModelData('users', thisProject[0].user_id).name
         console.log ownerName
-        alert "check console"
+        # alert "check console"
         $('#selected-project p').empty().html("Browsing a project by user "+ownerName)
         $('#start-new-poll').addClass('hidden')
         alert "browsing comunity"
@@ -309,8 +313,8 @@ $ ->
       newPollDetails = {details: {title: $title, description: $description, project_id: currentProjectId}}
       # alert "soon we will be posting a save of the following new poll: " + $title + " - " + $description
       $.post '/projects/'+currentProjectId+'/polls', (newPollDetails), (successData) ->
-        alert "got back " + successData.title
-        alert "current project id is " +currentProjectId
+        # alert "got back " + successData.title
+        # alert "current project id is " +currentProjectId
         $('#new-poll-title').val("")
         $('#new-poll-description').val("")
         $('#new-poll-form').addClass('hidden', mkStdDelay)
@@ -366,7 +370,7 @@ $ ->
         newQDetails = {details: {poll_id: $pollId, question_text: $newTextQ}}
         console.log newQDetails
         $.post '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_questions', (newQDetails), (successData) ->
-          alert "Just Saved " + successData.question_text
+          # alert "Just Saved " + successData.question_text
           console.log successData
           $('#new-text-q').val("")
           $('#new-text-q-form').addClass('hidden', mkStdDelay)
@@ -416,5 +420,4 @@ $ ->
   # =====================================================
 
 
-  $('#').click ->
 
