@@ -1,0 +1,9 @@
+// Set the correct sprite paths
+// instructions given to MK by
+// http://stackoverflow.com/questions/11092664/getting-bootstrap-sass-bootstrap-css-into-production-on-heroku
+
+$iconSpritePath: asset-url('glyphicons-halflings.png', image);
+$iconWhiteSpritePath: asset-url("glyphicons-halflings-white.png", image);
+
+@import "bootstrap";
+@import "bootstrap-responsive";
