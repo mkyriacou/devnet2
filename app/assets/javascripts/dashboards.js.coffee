@@ -17,7 +17,7 @@ $ ->
 
   mkStdDelay = 100
   textAreaRows = 3
-  textAreaWidth = 600
+  textAreaWidth = 80
 
   # set up functionalized tempates ... eventually should be the same template
   projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
@@ -180,8 +180,9 @@ $ ->
   $('#new-project').click ->
     # Make New Project Form visible
     $('#new-project-form').removeClass('hidden', mkStdDelay)
-    $("#project-listing-div").removeClass('hidden', mkStdDelay)
 
+    $('#new-project').addClass('hidden', mkStdDelay)
+    $("#project-listing-div").addClass('hidden', mkStdDelay)
     $("#selected-project").addClass('hidden', mkStdDelay)
     $("#all-project-polls").addClass('hidden', mkStdDelay)
     $("#selected-poll").addClass('hidden', mkStdDelay)
@@ -189,12 +190,17 @@ $ ->
 
     # CANCEL New Project Form
     $('#cancel-new-project').click ->
+      $('#new-project').removeClass('hidden', mkStdDelay)
+      $("#project-listing-div").removeClass('hidden', mkStdDelay)
       $('#new-proj-title').val("")
       $('#new-proj-description').val("")
       $('#new-project-form').addClass('hidden', mkStdDelay)
 
     # SAVE New Project Form
     $('#save-new-project-details').click ->
+      $("#project-listing-div").removeClass('hidden', mkStdDelay)
+      $('#new-project').removeClass('hidden', mkStdDelay)
+
       $title = $('#new-proj-title').val()
       $description = $('#new-proj-description').val()
 
@@ -362,11 +368,11 @@ $ ->
       console.log successData
       $('#all-poll-questions table').empty()
       $('#all-poll-questions').removeClass('hidden', mkStdDelay)
-      $('#all-poll-questions table').append('<hr>')
+      # $('#all-poll-questions table').append('<hr>')
       qNum = 1
       for thisQuestion in successData
         # IMPORTANT!  CONVERT TO JST !!
-        $('#all-poll-questions table').append("<tr><td>"+qNum+".  "+thisQuestion.question_text+"<br>  <textarea rows='textAreaRows' cols='textAreaWidth' placeholder='enter response here' ></textarea><hr></td></tr>")
+        $('#all-poll-questions table').append("<tr><center><td>"+qNum+".  "+thisQuestion.question_text+"<br>  <textarea rows='"+textAreaRows+"' cols='"+textAreaWidth+"' placeholder='enter response here' id='resp'"+thisQuestion.id+" ></textarea></td></center></tr>")
         qNum++
 
 
@@ -408,21 +414,29 @@ $ ->
     currentPollId = $(this).attr('id')
     populatePollSelected(currentPollId)
 
-# ===================================================================================
-# NEXT ITEM RIGHT HERE!!!!
-# MK next step: don't hve different divs, just switch classes on the same id to reuse
-# ===================================================================================
-# 1. make a dve for own and a div for foreign
-# 2. apply switches to the same divs so there is no duplication
-# 3. display if visitor or not
-# 4. if visitor and not already completed, have a nice fat button prompting to fill out
+
+  #if visitor and not already completed, have a nice fat button prompting to fill out
 
   # =====================================================
   # =====================================================
   # =====================================================
 
 
+  # Key Use Case:  SUBMIT RESPONSES
+  # =====================================================
 
+  $('#save-resp').click ->
+    # make each text area individually addressable
+    # build hash
+    # currentPollId
+    # currentUserId
+    # for thisResponse in
+    showMikeNow = $('#new-response').serialize()
+    alert showMikeNow
+    console.log showMikeNow
+
+  $('#cancel-resp').click ->
+    # just blank fields and cancel
 
 
 

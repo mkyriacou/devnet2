@@ -104,10 +104,11 @@
 
 <div id="new-poll-form" class="hidden poll own">
   <form>
+    <h4>Creating A New Project</h4>
+    <br>
     <input type="text" placeholder="poll title" id="new-poll-title">
     <br>
     <input type="text" placeholder="poll decription" id="new-poll-description">
-    <hr>
   <!--   Poll Category
     <br>
     <input type="checkbox" name="category" value="App Experience">App Experience
@@ -125,8 +126,8 @@
 
 
 <div id="all-project-polls" class="hidden poll own">
-  <p>All Project Polls - inspecting as .... detect if owner/visitor</p>
-  <table></table>
+<!--   <p>All Project Polls - inspecting as .... detect if owner/visitor</p>
+ -->  <table></table>
 </div>
 
 
@@ -160,8 +161,8 @@
 
 <div id="all-poll-questions" class="show-text-q hidden question own">
   <center>
-    <form>
-      <table border="2"></table>
+    <form id="new-response">
+      <table border="2" width="500"></table>
       <button class="btn btn-primary" id="save-resp"   type="button" >Submit Response!</button>
       <button class="btn btn-default" id="cancel-resp" type="button" >Cancel          </button>
     </form>
