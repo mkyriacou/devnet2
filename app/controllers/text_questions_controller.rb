@@ -1,10 +1,10 @@
 class TextQuestionsController < ApplicationController
 
   def index
-    @textQs = TextQuestion.where("poll_id = ?", params[:poll_id])
+    @text_qs = TextQuestion.where("poll_id = ?", params[:poll_id])
 
     respond_to do |format|
-      format.json {render json: @textQs}
+      format.json {render json: @text_qs}
     end
 
   end

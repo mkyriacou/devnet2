@@ -15,3 +15,4 @@
 //= require bootstrap.min.js
 //= require underscore-min.js
 //= require_tree .
+//= require /templates/project/proj-dir.ejs.eco

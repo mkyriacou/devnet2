@@ -15,11 +15,15 @@ $ ->
   currentUserId = $('#user-data userid').text()
   currentUserName = $('#user-data username').text()
 
-  mkStdDelay = 1000
+  mkStdDelay = 100
+  textAreaRows = 3
+  textAreaWidth = 600
 
   # set up functionalized tempates ... eventually should be the same template
   projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
   pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
+
+  questionTemplate = _.template('')
 
   # Define new primitive based on custom routes
   getModelData = (thisController, thisId) ->
@@ -41,11 +45,7 @@ $ ->
     # POST: corresponding user instance
     getProjFromPollId(pollId).user_id
 
-
-
-  # Naviage a user back to home state
-  $("#home-nav").click ->
-
+  homeState = () ->
     # Switch Div modes
     $("#project-listing-div").removeClass('community').addClass('own')
     $("#selected-project").removeClass('community').addClass('own')
@@ -53,7 +53,7 @@ $ ->
     $("#selected-poll").removeClass('community').addClass('own')
 
     # Make desired divs appear
-    $("#main-title").html(currentUserName+"'s own Apps and Projects")
+    $("#main-title").html(currentUserName+"'s own Apps")
     $("#project-listing-div").removeClass('hidden', mkStdDelay)
     $('#new-project').removeClass('hidden', mkStdDelay)
     $('#show-me-projects').removeClass('hidden', mkStdDelay)
@@ -72,9 +72,11 @@ $ ->
     $('#all-projects').addClass('hidden', mkStdDelay)
     $('#all-polls').addClass('hidden', mkStdDelay)
 
+  # Naviage a user back to home state
+  $("#home-nav").click ->
+    homeState()
 
-  $('#community-btn').click ->
-
+  communityState = () ->
     # Switch Div modes
     $("#project-listing-div").removeClass('own').addClass('community')
     $("#selected-project").removeClass('own').addClass('community')
@@ -95,6 +97,9 @@ $ ->
     $('#community-btn').addClass('hidden', mkStdDelay)
     $('#new-project').addClass('hidden', mkStdDelay)
     $('#show-me-projects').addClass('hidden', mkStdDelay)
+
+  $('#community-btn').click ->
+    communityState()
 
 
   # =====================================================
@@ -118,6 +123,7 @@ $ ->
   # ================================================
 
   $('#all-polls').click ->
+    $("#project-listing-div").addClass('hidden')
     $('#all-project-polls table').empty()
     $.get '/publicpolls', (successData) ->
       for thisPoll in successData
@@ -142,6 +148,7 @@ $ ->
     $("#selected-poll").addClass('hidden', mkStdDelay)
     $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
+
     if public_flag == true
       route_string = '/projects/publicproj'
     else
@@ -150,12 +157,13 @@ $ ->
     $.get route_string, (allProjs) ->
       $('#project-listing').empty()
       for thisProject in allProjs
+        # $('#project-listing').append JST['templates/project/proj-dir']({thisProject: thisProject})
         $('#project-listing').append(projTemplate({thisProject: thisProject}))
 
 
 
   # FIRST thing after page load:  Populate the user page with their projects.  Even if it's invisible for now.
-  populateProjectList(false)
+  homeState()
 
 
 
@@ -218,22 +226,25 @@ $ ->
 
 
   populateProjectSelected = (projectId) ->
-    # currentProjectId = projectId
-    # alert "working with this as project id: "
+    # set selected project as the current projectID
+    currentProjectId = projectId
+
     # get show - to grab all details and populate selected project div
     $.get '/projects/'+currentProjectId, (thisProject) ->
       $('#new-poll-form').addClass('hidden', mkStdDelay)
-      $("#all-project-polls").addClass('hidden', mkStdDelay)
       $("#selected-poll").addClass('hidden', mkStdDelay)
       $("#new-project-form").addClass('hidden', mkStdDelay)
       $("#project-listing-div").addClass('hidden', mkStdDelay)
 
-      $('#all-poll-questions').removeClass('hidden', mkStdDelay)
+      $('#all-poll-questions').addClass('hidden', mkStdDelay)
 
       $('#selected-project h3').empty()
       $('#selected-project h4').empty()
       $('#selected-project').removeClass('hidden', mkStdDelay)
+      $("#all-project-polls").removeClass('hidden', mkStdDelay)
+
       # unacceptable - put this into a template or JST!!
+      # Poll heading
       $('#selected-project h3').append("PROJECT: "+thisProject[0].title)
       $('#selected-project h4').append(thisProject[0].description)
 
@@ -247,7 +258,9 @@ $ ->
         else
           $('#all-project-polls table').empty()
           for thisPoll in pollsForThisProject
-            $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
+            $('#all-project-polls table').append(pollTemplate({thisPoll: thisPoll}))
+            # $('#all-project-polls table').append(JST["app/assets/javascripts/templates/poll/poll-dir.ejs.eco"]({thisPoll: thisPoll}))
+
       # alert +currentUserId+" "+thisProject[0].user_id
       if +currentUserId == +thisProject[0].user_id
         $('#selected-project p').empty().html("Browsing YOUR OWN project...")
@@ -341,7 +354,7 @@ $ ->
       $('#selected-poll h4').empty()
       $('#selected-poll h5').empty()
 
-      $('#selected-poll h4').append('<hr>SURVEY:  '+thisPoll.title)
+      $('#selected-poll h4').append('SURVEY:  '+thisPoll.title)
       $('#selected-poll h5').append(thisPoll.description+'<hr>')
 
     # Get questions so far
@@ -353,35 +366,37 @@ $ ->
       qNum = 1
       for thisQuestion in successData
         # IMPORTANT!  CONVERT TO JST !!
-        $('#all-poll-questions table').append("<tr><td>"+qNum+".  "+thisQuestion.question_text+"<hr></td></tr>")
+        $('#all-poll-questions table').append("<tr><td>"+qNum+".  "+thisQuestion.question_text+"<br>  <textarea rows='textAreaRows' cols='textAreaWidth' placeholder='enter response here' ></textarea><hr></td></tr>")
         qNum++
 
 
-    # KEY USE CASE:  ADD QUESTION to a poll
-    # =========================================
-    $('#add-text-q').click ->
-      event.preventDefault()
-      $('#new-text-q-form').removeClass('hidden', mkStdDelay)
+  # KEY USE CASE:  ADD QUESTION to a poll
+  # =========================================
+  $('#add-text-q').click ->
+    event.preventDefault()
+    $('#poll-builder-buttons').addClass('hidden', mkStdDelay)
+    $('#new-text-q-form').removeClass('hidden', mkStdDelay)
 
-      #save q
-      $('#save-new-text-q').click ->
-        $newTextQ = $('#new-text-q').val()
-        $pollId = currentPollId
-        newQDetails = {details: {poll_id: $pollId, question_text: $newTextQ}}
-        console.log newQDetails
-        $.post '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_questions', (newQDetails), (successData) ->
-          # alert "Just Saved " + successData.question_text
-          console.log successData
-          $('#new-text-q').val("")
-          $('#new-text-q-form').addClass('hidden', mkStdDelay)
-          populatePollSelected(currentPollId)
+  #save q
+  $('#save-new-text-q').click ->
+    $newTextQ = $('#new-text-q').val()
+    $pollId = currentPollId
+    newQDetails = {details: {poll_id: $pollId, question_text: $newTextQ}}
+    console.log newQDetails
+    $.post '/projects/'+currentProjectId+'/polls/'+currentPollId+'/text_questions', (newQDetails), (successData) ->
+      # alert "Just Saved " + successData.question_text
+      console.log successData
+      $('#new-text-q').val("")
+      $('#new-text-q-form').addClass('hidden', mkStdDelay)
+      $('#poll-builder-buttons').removeClass('hidden', mkStdDelay)
+      populatePollSelected(currentPollId)
 
-      #cancel q
-      $('#cancel-new-text-q').click ->
-        alert "should dissapear"
-        $('#new-text-q').val("")
-
-        $('#new-text-q-form').addClass('hidden', mkStdDelay)
+  #cancel q
+  $('#cancel-new-text-q').click ->
+    alert "should dissapear"
+    $('#new-text-q').val("")
+    $('#new-text-q-form').addClass('hidden', mkStdDelay)
+    $('#poll-builder-buttons').removeClass('hidden', mkStdDelay)
 
 
 

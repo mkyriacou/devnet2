@@ -1,32 +1,34 @@
 <h3 id="main-title" class="center-text"></h3>
 <hr>
 <center>
-  <button id="home-nav" class="btn btn-primary btn-lg">
-    <span class="glyphicon glyphicon-home"></span>
-  </button>
 
   <button id="community-btn" class="btn btn-success btn-lg">
     <span class="glyphicon glyphicon-globe"></span>
   </button>
 
-  <button id="new-project" class="btn btn-default btn-lg">
-    <span class="glyphicon glyphicon-file"> New Project</span>
+  <button id="home-nav" class="btn btn-primary btn-lg">
+    <span class="glyphicon glyphicon-home"></span>
   </button>
+
+
 
   <button id="show-me-projects" class="btn btn-default btn-lg">
-    <span class="glyphicon glyphicon-list"> My projects </span>
+    <span class="glyphicon glyphicon-list"> My apps </span>
+  </button>
+
+  <button id="new-project" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-file"> New </span>
   </button>
 
 
 
 
-
- <button id="all-users" class="btn btn-success btn-lg hidden">
+  <button id="all-users" class="btn btn-success btn-lg hidden">
      <img src="/assets/glyphicons_043_group.png" />  Users
   </button>
 
   <button id="all-projects" class="btn btn-success btn-lg hidden">
-    <img src="/assets/glyphicons_319_sort.png" />  Projects
+    <img src="/assets/glyphicons_319_sort.png" />  Apps
   </button>
 
   <button id="all-polls" class="btn btn-success btn-lg hidden">
@@ -78,7 +80,7 @@
 
 
 <div id="project-listing-div" class="hidden own">
-  <p>All Projects (inspecting as owner/visitor)</p>
+  <p>All Projects (inspecting as ... detect if owner/visitor)</p>
   <table id="project-listing"></table>
 </div>
 
@@ -87,10 +89,16 @@
  -->
 
 <div id="selected-poll" class="hidden poll own">
-  <p>Selected Poll - inspecting as owner/visitor</p>
   <h4></h4>
   <h5></h5>
   <button id="start-feedback" class="hidden">Give Feedback</button>
+
+  <div id="poll-builder-buttons" class="hidden question">
+    <button id="add-text-q">Add Text Question</button>
+    <button id="add-vote-q">Add Vote Question (inactive)</button>
+    <button id="add-url">Add Link (inactive)</button>
+  </div>
+
 </div>
 
 
@@ -114,15 +122,10 @@
   </form>
 </div>
 
-<div id="poll-builder-buttons" class="hidden question own">
-  <button id="add-text-q">Add Text Question</button>
-  <button id="add-vote-q">Add Vote Question (inactive)</button>
-  <button id="add-url">Add Link (inactive)</button>
-</div>
 
 
 <div id="all-project-polls" class="hidden poll own">
-  <p>All Project Polls - inspecting as owner/visitor</p>
+  <p>All Project Polls - inspecting as .... detect if owner/visitor</p>
   <table></table>
 </div>
 
@@ -156,7 +159,13 @@
 
 
 <div id="all-poll-questions" class="show-text-q hidden question own">
-  <table></table>
+  <center>
+    <form>
+      <table border="2"></table>
+      <button class="btn btn-primary" id="save-resp"   type="button" >Submit Response!</button>
+      <button class="btn btn-default" id="cancel-resp" type="button" >Cancel          </button>
+    </form>
+  </center>
 </div>
 
 
