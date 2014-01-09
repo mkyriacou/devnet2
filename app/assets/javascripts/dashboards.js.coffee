@@ -19,11 +19,21 @@ $ ->
   textAreaRows = 3
   textAreaWidth = 80
 
-  # set up functionalized tempates ... eventually should be the same template
-  projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
-  pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
+  $.fn.serializeObject = ->
+    o = {}
+    a = @serializeArray()
+    $.each a, ->
+      if o[@name] isnt `undefined`
+        o[@name] = [o[@name]]  unless o[@name].push
+        o[@name].push @value or ""
+      else
+        o[@name] = @value or ""
+    o
 
-  questionTemplate = _.template('')
+  # set up functionalized tempates ... eventually should be the same template
+  # projTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisProject.id %>"><%= thisProject.title %></button></tr>')
+  # pollTemplate = _.template('<hr><tr><button class="btn btn-primary" id="<%= thisPoll.id %>"><%= thisPoll.title %></button></tr>')
+
 
   # Define new primitive based on custom routes
   getModelData = (thisController, thisId) ->
@@ -127,7 +137,7 @@ $ ->
     $('#all-project-polls table').empty()
     $.get '/publicpolls', (successData) ->
       for thisPoll in successData
-        $('#all-project-polls table').append(pollTemplate(thisPoll: thisPoll))
+        $('#all-project-polls table').append(JST["templates/poll/poll-dir"]({thisPoll: thisPoll}))
       $('#all-project-polls table button').removeClass('btn-primary').addClass('btn-success')
       $('#all-project-polls').removeClass('hidden')
 
@@ -157,8 +167,10 @@ $ ->
     $.get route_string, (allProjs) ->
       $('#project-listing').empty()
       for thisProject in allProjs
-        # $('#project-listing').append JST['templates/project/proj-dir']({thisProject: thisProject})
-        $('#project-listing').append(projTemplate({thisProject: thisProject}))
+
+        $('#project-listing').append JST['templates/project/proj-dir']({thisProject: thisProject})
+
+        # $('#project-listing').append(projTemplate({thisProject: thisProject}))
 
 
 
@@ -264,8 +276,8 @@ $ ->
         else
           $('#all-project-polls table').empty()
           for thisPoll in pollsForThisProject
-            $('#all-project-polls table').append(pollTemplate({thisPoll: thisPoll}))
-            # $('#all-project-polls table').append(JST["app/assets/javascripts/templates/poll/poll-dir.ejs.eco"]({thisPoll: thisPoll}))
+            # $('#all-project-polls table').append(pollTemplate({thisPoll: thisPoll}))
+            $('#all-project-polls table').append(JST["templates/poll/poll-dir"]({thisPoll: thisPoll}))
 
       # alert +currentUserId+" "+thisProject[0].user_id
       if +currentUserId == +thisProject[0].user_id
@@ -372,7 +384,8 @@ $ ->
       qNum = 1
       for thisQuestion in successData
         # IMPORTANT!  CONVERT TO JST !!
-        $('#all-poll-questions table').append("<tr><center><td>"+qNum+".  "+thisQuestion.question_text+"<br>  <textarea rows='"+textAreaRows+"' cols='"+textAreaWidth+"' placeholder='enter response here' id='resp'"+thisQuestion.id+" ></textarea></td></center></tr>")
+        $('#all-poll-questions table').append("<tr><center><td>"+qNum+".  "+thisQuestion.question_text+"<br>  <textarea rows='"+textAreaRows+"' cols='"+textAreaWidth+"' placeholder='enter response here' ></textarea></td></center></tr>")
+        #extracted part: id='resp'"+thisQuestion.id+"
         qNum++
 
 
@@ -431,7 +444,7 @@ $ ->
     # currentPollId
     # currentUserId
     # for thisResponse in
-    showMikeNow = $('#new-response').serialize()
+    showMikeNow = $('#new-response').serializeObject()
     alert showMikeNow
     console.log showMikeNow
 
